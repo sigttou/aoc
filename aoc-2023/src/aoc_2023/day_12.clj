@@ -47,16 +47,14 @@
 
 (defn extend-springs
   [[springs broken] val]
-  [(str (apply str (butlast (apply str (repeat val (str springs "?"))))) ".")
-   (apply concat (repeat val broken))])
+  [(str (string/join \? (repeat val springs)) \.)
+   (flatten (repeat val broken))])
 
 (def spring-eater
   (memoize
    (fn [springs broken cur]
      (if (empty? springs)
-       (if (and (empty? broken) (= 0 cur))
-         1
-         0)
+       (if (and (empty? broken) (= 0 cur)) 1 0)
        (+ (if (some #{(first springs)} '(\# \?))
             (spring-eater (rest springs) broken (inc cur))
             0)
@@ -72,7 +70,7 @@
   ([] (part-two input-file-path))
   ([filename]
    (let [extended-springs (map #(extend-springs % 5) (parse-input filename))]
-     (apply + (map #(spring-eater (first %) (second %) 0) extended-springs)))))
+     (apply + (pmap #(spring-eater (first %) (second %) 0) extended-springs)))))
 
 (defn run 
   []
