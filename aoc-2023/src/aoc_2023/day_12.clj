@@ -50,38 +50,29 @@
   [(str (apply str (butlast (apply str (repeat val (str springs "?"))))) ".")
    (apply concat (repeat val broken))])
 
-(def gen-with-check
+(def spring-eater
   (memoize
-   (fn [springs counts pos current_count countpos]
-     (if (= pos (count springs))
-       (if (= (count counts) countpos)
+   (fn [springs broken cur]
+     (if (empty? springs)
+       (if (and (empty? broken) (= 0 cur))
          1
          0)
-       (if (= (nth springs pos) \#)
-         (gen-with-check springs counts (inc pos) (inc current_count) countpos)
-         (if (or (= (nth springs pos) \.)
-                 (= countpos (count counts)))
-           (if (and (< countpos (count counts))
-                    (= current_count (nth counts countpos)))
-             (gen-with-check springs counts (inc pos) 0 (inc countpos))
-             (if (= current_count 0)
-               (gen-with-check springs counts (inc pos) 0 countpos)
-               0))
-           (let [hash_cnt (gen-with-check springs counts (inc pos)
-                                          (inc current_count) countpos)]
-             (+ hash_cnt
-                (if (= current_count (nth counts countpos))
-                  (gen-with-check springs counts (inc pos) 0 (inc countpos))
-                  (if (= current_count 0)
-                    (gen-with-check springs counts (inc pos) 0 countpos)
-                    0))))))))))
+       (+ (if (some #{(first springs)} '(\# \?))
+            (spring-eater (rest springs) broken (inc cur))
+            0)
+          (if (and (some #{(first springs)} '(\. \?))
+                   (or (and (not-empty broken) (= (first broken) cur))
+                       (= 0 cur)))
+            (spring-eater (rest springs) (if (= 0 cur)
+                                           broken
+                                           (rest broken)) 0)
+            0))))))
 
 (defn part-two
   ([] (part-two input-file-path))
   ([filename]
    (let [extended-springs (map #(extend-springs % 5) (parse-input filename))]
-     (apply + (map #(gen-with-check (first %) (second %) 0 0 0)
-                   extended-springs)))))
+     (apply + (map #(spring-eater (first %) (second %) 0) extended-springs)))))
 
 (defn run 
   []
