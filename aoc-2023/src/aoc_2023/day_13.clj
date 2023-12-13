@@ -13,7 +13,7 @@
 
 (defn get-diff-cnt
   [a b]
-  (count (filter false? (map #(= %1 %2) a b))))
+  (count (filter false? (map = a b))))
 
 (defn check-broken
   ([pattern] (check-broken pattern 0))
@@ -21,7 +21,7 @@
    (reduce (fn [_ idx]
              (let [start (reverse (take idx pattern))
                    end (drop idx pattern)]
-               (if (= cnt (apply + (map #(get-diff-cnt %1 %2) start end)))
+               (if (= cnt (reduce + (map get-diff-cnt start end)))
                  (reduced idx)
                  0)))
            0
@@ -31,15 +31,15 @@
   ([] (part-one input-file-path))
   ([filename]
    (let [patterns (parse-input filename)]
-     (+ (* 100 (apply + (map check-broken patterns)))
-        (apply + (map #(check-broken (apply map vector %)) patterns))))))
+     (+ (* 100 (reduce + (map check-broken patterns)))
+        (reduce + (map #(check-broken (apply map vector %)) patterns))))))
 
 (defn part-two
   ([] (part-two input-file-path))
   ([filename]
    (let [patterns (parse-input filename)]
-     (+ (* 100 (apply + (map #(check-broken % 1) patterns)))
-        (apply + (map #(check-broken (apply map vector %) 1) patterns))))))
+     (+ (* 100 (reduce + (map #(check-broken % 1) patterns)))
+        (reduce + (map #(check-broken (apply map vector %) 1) patterns))))))
 
 (defn run 
   []
