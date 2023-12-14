@@ -16,10 +16,11 @@
   (count (filter false? (map = a b))))
 
 (defn check-broken
-  ([pattern] (check-broken pattern 0))
-  ([pattern cnt]
+  ([pattern] (check-broken pattern (reverse pattern) 0))
+  ([pattern cnt] (check-broken pattern (reverse pattern) cnt))
+  ([pattern rev-pattern cnt]
    (reduce (fn [_ idx]
-             (let [start (reverse (take idx pattern))
+             (let [start (take-last idx rev-pattern)
                    end (drop idx pattern)]
                (if (= cnt (reduce + (map get-diff-cnt start end)))
                  (reduced idx)
