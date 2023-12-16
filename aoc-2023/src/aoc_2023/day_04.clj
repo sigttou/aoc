@@ -1,5 +1,5 @@
 (ns aoc-2023.day-04
-  (:require [aoc-2023.helpers :as helpers] 
+  (:require [aoc-2023.helpers :as helpers]
             [clojure.string :as string]))
 
 (def input-file-path "inputs/day_04/input")
@@ -21,7 +21,7 @@
      :cnt 1})
   )
 
-(defn parse-input 
+(defn parse-input
   [filename]
   (map get-card (string/split (slurp filename) #"\n")))
 
@@ -75,7 +75,7 @@
              0
              copied-cards))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

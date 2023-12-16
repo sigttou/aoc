@@ -49,7 +49,6 @@
               (get-hand-type hand))
             ) entries)))
 
-
 (defn part-one
   ([] (part-one input-file-path))
   ([filename]
@@ -91,7 +90,7 @@
              0
              (map vector (drop 1 (range)) sorted-hands)))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

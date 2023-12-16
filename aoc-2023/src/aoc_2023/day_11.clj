@@ -23,7 +23,7 @@
 (defn parse-input
   [filename]
   (let [entries (string/split (slurp filename) #"\n")]
-    (map #(apply vector %) (reverse entries))))
+    (map vec (reverse entries))))
 
 (defn get-galaxies
   [field]
@@ -84,7 +84,7 @@
              0
              galaxy-pairs))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

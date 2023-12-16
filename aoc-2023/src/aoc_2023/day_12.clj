@@ -72,7 +72,7 @@
    (let [extended-springs (map #(extend-springs % 5) (parse-input filename))]
      (apply + (pmap #(spring-eater (first %) (second %) 0) extended-springs)))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

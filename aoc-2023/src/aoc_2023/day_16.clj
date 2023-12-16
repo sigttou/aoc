@@ -80,7 +80,7 @@
                                                 [sx sy] [sdx sdy])))))
                       starting-pos)))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

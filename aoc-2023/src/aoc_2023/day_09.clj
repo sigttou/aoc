@@ -48,7 +48,7 @@
                              (parse-input filename))]
      (apply + (map get-prev-val analysed-diffs)))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

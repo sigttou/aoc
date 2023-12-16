@@ -8,7 +8,7 @@
 (defn parse-input
   [filename]
   (let [patterns (string/split (slurp filename) #"\n\n")]
-    (map (fn [entry] (map #(apply vector %) (string/split entry #"\n")))
+    (map (fn [entry] (map vec (string/split entry #"\n")))
          patterns)))
 
 (defn get-diff-cnt
@@ -42,7 +42,7 @@
      (+ (* 100 (reduce + (map #(check-broken % 1) patterns)))
         (reduce + (map #(check-broken (apply map vector %) 1) patterns))))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

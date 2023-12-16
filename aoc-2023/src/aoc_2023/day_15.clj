@@ -30,14 +30,13 @@
       (update boxes hash (fn [box]
                            (let [idx (.indexOf (map first box) label)]
                              (if (= -1 idx)
-                               (apply vector (conj box [label val]))
+                               (vec (conj box [label val]))
                                (assoc box idx [label val])))))
-      (update boxes hash (fn [box]
-                           (apply vector (remove #(= label (first %)) box)))))))
+      (update boxes hash (fn [box] (vec (remove #(= label (first %)) box)))))))
 
 (defn fill-boxes
   [lenses]
-  (let [boxes (apply vector (repeat 256 []))]
+  (let [boxes (vec (repeat 256 []))]
     (reduce #(lens-to-box %1 %2)
             boxes
             lenses)))
@@ -61,7 +60,7 @@
           fill-boxes
           score-boxes))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

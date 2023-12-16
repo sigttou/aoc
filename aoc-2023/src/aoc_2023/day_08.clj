@@ -28,7 +28,7 @@
   [filename]
   (let [entries (string/split (slurp filename) #"\n\n")
         directions (get-directions (first entries))
-        nodes (get-nodes (second entries))]                                                                                                                                  
+        nodes (get-nodes (second entries))]
     [directions nodes]))
 
 (defn get-path-len                                                                                                                                                         [start end-test-fn nodes directions]
@@ -62,7 +62,7 @@
                            starts)]
      (reduce math/lcm (map first path-lengths)))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

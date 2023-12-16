@@ -1,5 +1,5 @@
 (ns aoc-2023.day-03
-  (:require [aoc-2023.helpers :as helpers] 
+  (:require [aoc-2023.helpers :as helpers]
             [clojure.string :as string]))
 
 (def input-file-path "inputs/day_03/input")
@@ -116,7 +116,7 @@
              0
              (range (count lines))))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

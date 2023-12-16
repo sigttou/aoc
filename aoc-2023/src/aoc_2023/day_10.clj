@@ -8,13 +8,13 @@
 (defn get-start
   [field]
   (let [x (first (filter #(not (= -1 %)) (map #(.indexOf % \S) field)))
-        y (.indexOf (apply vector (map #(.indexOf % \S) field)) x)]
+        y (.indexOf (vec (map #(.indexOf % \S) field)) x)]
     {:x x :y y}))
 
 (defn parse-input
   [filename]
   (let [entries (string/split (slurp filename) #"\n")]
-    (map #(apply vector %) entries)))
+    (map vec entries)))
 
 (defn field-get
   [field pos]
@@ -99,7 +99,7 @@
      (count (filter true? (map #(check-coord field path start-face-north %)
                                coords))))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

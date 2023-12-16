@@ -1,4 +1,4 @@
-(ns aoc-2023.day-02 
+(ns aoc-2023.day-02
   (:require [aoc-2023.helpers :as helpers]
             [clojure.string :as string]))
 
@@ -70,7 +70,7 @@
    (let [games (parse-input filename)]
      (reduce + (map get-game-power games)))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

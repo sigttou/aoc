@@ -17,7 +17,7 @@
   ([] (part-two input-file-path))
   ([filename]))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

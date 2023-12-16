@@ -9,7 +9,7 @@
 (defn parse-input
   [filename]
   (let [entries (string/split (slurp filename) #"\n")]
-    (apply vector (map #(apply vector %) entries))))
+    (vec (map vec entries))))
 
 (defn print-field
   [field]
@@ -63,8 +63,8 @@
 
 (def rotate-field
   (memoize (fn [field]
-             (apply vector (map #(apply vector (reverse %))
-                                (apply map vector field))))))
+             (vec (map #(vec (reverse %))
+                       (apply map vector field))))))
 
 (def cycle-tilt
   (memoize (fn [field]
@@ -82,7 +82,6 @@
                             (cycle-tilt out))
                           field
                           (range 1000000000))))))
-
 
   (defn run
     []

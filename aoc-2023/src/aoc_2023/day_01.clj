@@ -4,7 +4,7 @@
 
 (def input-file-path "inputs/day_01/input")
 
-(defn parse-input 
+(defn parse-input
   [filename]
   (string/split (slurp filename) #"\n"))
 
@@ -47,7 +47,7 @@
   ([filename]
    (apply + (map get-num (parse-input filename)))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

@@ -36,7 +36,7 @@
   ([filename]
    (part-one filename get-part-2-nums)))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))

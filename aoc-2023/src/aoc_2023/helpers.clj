@@ -1,4 +1,4 @@
-(ns aoc-2023.helpers 
+(ns aoc-2023.helpers
   (:require [clojure.string :as string]))
 
 (defn reload "reload file" [] (require 'aoc-2023.core :reload-all))

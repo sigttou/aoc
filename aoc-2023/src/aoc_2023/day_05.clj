@@ -20,7 +20,7 @@
   [entry]
   (let [source-range (list (second entry) (+ (second entry) (last entry)))
         dest-range (list (first entry) (+ (first entry) (last entry)))]
-    (list (apply vector source-range) (apply vector dest-range))))
+    (list (vec source-range) (vec dest-range))))
 
 (defn check-source
   [seed source]
@@ -101,7 +101,7 @@
              min-in
              converters))))
 
-(defn run 
+(defn run
   []
   (println (part-one))
   (println (part-two)))
