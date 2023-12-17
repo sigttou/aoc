@@ -9,18 +9,13 @@
 
 (defn parse-input
   [filename]
-  (let [entries (reverse (string/split (slurp filename) #"\n"))]
-    (loop [x 0
-           y 0
-           field {}]
-      (if (= (count entries) y)
-        field
-        (if (= (dec (count (first entries))) x)
-          (recur 0 (inc y)
-                 (assoc field [x y] (Integer. (str (nth (nth entries y) x)))))
-          (recur (inc x) y
-                 (assoc field [x y]
-                        (Integer. (str (nth (nth entries y) x))))))))))
+  (->> (string/split (slurp filename) #"\n")
+       reverse
+       (map #(mapv parse-long (string/split % #"")))
+       (map-indexed vector)
+       (map (fn [e] (map-indexed #(identity [[%1 (first e)] %2]) (second e))))
+       (apply concat)
+       (into {})))
 
 (defn print-field
   [field]
