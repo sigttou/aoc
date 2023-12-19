@@ -43,7 +43,7 @@
   [wfs name shape]
   (some (fn [op]
           (if (:op op)
-            (if ((eval (read-string (str (:op op))))
+            (if ((partial (get {\< <} (:op op) >))
                  (get shape (:target op)) (:val op))
               (if (get wfs (:des op))
                 (apply-wf wfs (:des op) shape)
