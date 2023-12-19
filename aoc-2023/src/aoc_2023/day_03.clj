@@ -49,7 +49,7 @@
                                                        (get-pos-to-check
                                                         (get lines index) num)))
                                          (list (dec index) index (inc index))))
-                                (Integer. num)
+                                (parse-long num)
                                 0)) (re-seq #"\d+" (get lines index)))))
            0
            (range (count lines))))))
@@ -102,7 +102,7 @@
           []
           (range (dec lineidx) (+ 2 lineidx)))]
     (if (= 2 (count to-ret))
-      (apply * (map #(Integer. %) to-ret))
+      (apply * (map #(parse-long %) to-ret))
       0)))
 
 (defn part-two

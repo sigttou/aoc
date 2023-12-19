@@ -28,7 +28,7 @@
         hash (hash-str label)]
     (if val
       (update boxes hash (fn [box]
-                           (let [idx (.indexOf (map first box) label)]
+                           (let [idx (helpers/index-of (map first box) label)]
                              (if (= -1 idx)
                                (vec (conj box [label val]))
                                (assoc box idx [label val])))))
@@ -46,7 +46,7 @@
   (reduce (fn [score box-idx]
             (+ score (reduce (fn [val [lens-idx entry]]
                                (+ val (* (inc box-idx) (inc lens-idx)
-                                         (Integer. (second entry)))))
+                                         (parse-long (second entry)))))
                              0
                              (keep-indexed #(identity %&)(get boxes box-idx)))))
           0

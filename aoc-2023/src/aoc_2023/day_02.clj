@@ -11,7 +11,7 @@
 
 (defn get-entry
   [entry]
-  (list (re-find #"[a-z]+" entry) (Integer. (re-find #"\d+" entry))))
+  (list (re-find #"[a-z]+" entry) (parse-long (re-find #"\d+" entry))))
 
 (defn get-turn
   [entry]
@@ -25,7 +25,7 @@
   [filename]
   (let [lines (string/split (slurp filename) #"\n")]
     (reduce (fn [games line]
-              (let [game-id (Integer. (first (re-seq #"\d+" line)))
+              (let [game-id (parse-long (first (re-seq #"\d+" line)))
                     turns (get-turns (second (string/split line #":")))]
                 (assoc-in games [game-id] turns)))
             {}

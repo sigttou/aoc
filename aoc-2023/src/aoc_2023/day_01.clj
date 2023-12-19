@@ -11,7 +11,7 @@
 (defn part-one
   ([] (part-one input-file-path))
   ([filename]
-   (apply + (map #(Integer. (str (first %) (last %)))
+   (apply + (map #(parse-long (str (first %) (last %)))
                  (map #(re-seq #"\d" %) (parse-input filename))))))
 
 (def replace-lookup-map
@@ -40,7 +40,7 @@
              (re-seq num-regex line))
         first-digit (first (re-seq #"\d" (replace-num line (first to-replace))))
         last-digit (last (re-seq #"\d" (replace-num line (last to-replace))))]
-  (Integer. (str first-digit last-digit))))
+    (parse-long (str first-digit last-digit))))
 
 (defn part-two
   ([] (part-two input-file-path))

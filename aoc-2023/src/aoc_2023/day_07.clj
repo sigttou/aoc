@@ -44,7 +44,7 @@
     (map (fn [entry]
             (let [cards (into [] (map #(get card-values %)
                                   (first (string/split entry #" "))))
-                  bid (Integer. (second (string/split entry #" ")))
+                  bid (parse-long (second (string/split entry #" ")))
                   hand {:cards cards :bid bid :type nil}]
               (get-hand-type hand))
             ) entries)))

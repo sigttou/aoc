@@ -12,9 +12,9 @@
   (let [entries (string/split (slurp filename) #"\n")]
     (reduce (fn [out line]
               (let [springs (first (string/split line #" "))
-                    broken (map #(Integer. %) (string/split
-                                               (second (string/split line #" "))
-                                               #","))]
+                    broken (map #(parse-long %)
+                                (string/split (second (string/split line #" "))
+                                              #","))]
                 (conj out [springs broken])))
             []
             entries)))

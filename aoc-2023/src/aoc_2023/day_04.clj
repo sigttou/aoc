@@ -6,9 +6,9 @@
 
 (defn get-card
   [line]
-  (let [card-id (Integer. (last
-                           (string/split (first (string/split line #":"))
-                                         #" ")))
+  (let [card-id (parse-long (last
+                             (string/split (first (string/split line #":"))
+                                           #" ")))
         win-nums (helpers/get-numbers
                   (first (string/split (second (string/split line #":"))
                                        #"\|")))

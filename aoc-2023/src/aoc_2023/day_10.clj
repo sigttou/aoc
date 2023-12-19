@@ -7,8 +7,8 @@
 
 (defn get-start
   [field]
-  (let [x (first (filter #(not (= -1 %)) (map #(.indexOf % \S) field)))
-        y (.indexOf (vec (map #(.indexOf % \S) field)) x)]
+  (let [x (first (filter #(not (nil? %)) (map #(helpers/index-of % \S) field)))
+        y (helpers/index-of (vec (map #(helpers/index-of % \S) field)) x)]
     {:x x :y y}))
 
 (defn parse-input
