@@ -15,8 +15,8 @@
                               (if (nil? des)
                                 {:des opstr}
                                 {:op (second opstr)
-                                 :val (parse-long
-                                       (apply str (drop 2 opstr)))
+                                 :value (parse-long
+                                         (apply str (drop 2 opstr)))
                                  :target (first opstr)
                                  :des des}))))
                     []
@@ -41,16 +41,17 @@
 
 (defn apply-wf
   [wfs name shape]
-  (some (fn [op]
-          (if (:op op)
-            (if ((get {\< <} (:op op) >) (get shape (:target op)) (:val op))
-              (if (get wfs (:des op))
-                (apply-wf wfs (:des op) shape)
-                (:des op))
+  (some (fn [{:keys [op target value des]}]
+          (if op
+            (if ((get {\< <} op >) (get shape target) value)
+              (if (get wfs des)
+                (apply-wf wfs des shape)
+                des)
               false)
-            (if (get wfs (:des op))
-              (apply-wf wfs (:des op) shape)
-              (:des op)))) (get wfs name)))
+            (if (get wfs des)
+              (apply-wf wfs des shape)
+              des)))
+        (get wfs name)))
 
 (defn part-one
   ([] (part-one input-file-path))
@@ -66,32 +67,26 @@
     [curanges]
     (if (= name "R")
       []
-      (first (reduce (fn [[out part] op]
-                       (if (:op op)
-                         (let [[s e] (get part (:target op))]
-                           (if (= (:op op) \>)
-                             (if (and (<= s (:val op)) (< (:val op) e))
-                               [(into out
-                                      (get-ranges
-                                       wfs (:des op)
-                                       (assoc part (:target op)
-                                              [(inc (:val op))
-                                               e])))
-                                (assoc part (:target op) [s (:val op)])]
-                               [out part])
-                             (if (and (< s (:val op)) (<= (:val op) e))
-                               [(into out
-                                      (get-ranges
-                                       wfs (:des op)
-                                       (assoc part (:target op)
-                                              [s
-                                               (dec (:val op))])))
-                                (assoc part (:target op) [(:val op) e])]
-                               [out part])))
-                         (reduced
-                          [(into out (get-ranges wfs (:des op) part)) []])))
-                     [[] curanges]
-                     (get wfs name))))))
+      (first (reduce
+              (fn [[out part] {:keys [op target value des]}]
+                (if op
+                  (let [[s e] (get part target)]
+                    (if (= op \>)
+                      (if (and (<= s value) (< value e))
+                        [(into out (get-ranges
+                                    wfs des
+                                    (assoc part target [(inc value) e])))
+                         (assoc part target [s value])]
+                        [out part])
+                      (if (and (< s value) (<= value e))
+                        [(into out (get-ranges
+                                    wfs des
+                                    (assoc part target [s (dec value)])))
+                         (assoc part target [value e])]
+                        [out part])))
+                  (reduced [(into out (get-ranges wfs des part)) []])))
+              [[] curanges]
+              (get wfs name))))))
 
 (defn part-two
   ([] (part-two input-file-path))
