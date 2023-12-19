@@ -1,7 +1,7 @@
 (ns aoc-2023.helpers
   (:require [clojure.string :as string]))
 
-(defn reload "reload file" [] (require 'aoc-2023.core :reload-all))
+(defn reload "reload file" [] (require (ns-name *ns*) :reload-all))
 
 (defn get-numbers
   [num-str]
