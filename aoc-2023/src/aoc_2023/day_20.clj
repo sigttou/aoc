@@ -51,103 +51,101 @@
   ([] (part-one input-file-path))
   ([filename]
    (let [modules (parse-input filename)
-         inputs (get-inputs modules)
-         hcnt (atom 0)
-         lcnt (atom 0)]
-     (loop [cnt 0
-            hist (get-history modules inputs)]
+         inputs (get-inputs modules)]
+     (loop [hist (get-history modules inputs)
+            todo [[nil "broadcaster" false]]
+            cnt 0
+            highcnt 0
+            lowcnt 0]
        (if (< cnt 1000)
-         (recur
-          (inc cnt)
-          (loop [[new-hist todo] [hist [[nil "broadcaster" false]]]]
-            (if (empty? todo)
-              new-hist
-              (recur
-               (reduce
-                (fn [[lhist ltodo] [src name high]]
-                  (if high
-                    (swap! hcnt inc)
-                    (swap! lcnt inc))
-                  (if-let [node (get modules name)]
-                    (case (:type node)
-                      :flip (if high
-                              [lhist ltodo]
-                              (let [state (get lhist name)]
-                                [(assoc lhist name (not state))
-                                 (concat ltodo
-                                         (mapv #(identity
-                                                 [name % (not state)])
-                                               (:outputs node)))]))
-                      :conj (let [states (get lhist name)
-                                  nstates (assoc states src high)
-                                  signal (if (some false? (vals nstates))
-                                           true
-                                           false)]
-                              [(assoc lhist name nstates)
-                               (concat ltodo (mapv #(identity
-                                                     [name % signal])
-                                                   (:outputs node)))])
-                      :broadcast [lhist (concat ltodo
-                                                (mapv #(identity
-                                                        [name % high])
-                                                      (:outputs node)))])
-                    [lhist ltodo]))
-                [new-hist []]
-                todo)))))
-         nil))
-     (* @hcnt @lcnt))))
+         (if (empty? todo)
+           (recur hist [[nil "broadcaster" false]] (inc cnt) highcnt lowcnt)
+           (let [[new-hcnt new-lcnt new-hist new-todo]
+                 (reduce
+                  (fn [[hcnt lcnt lhist ltodo] [src name high]]
+                    (concat
+                     (if high
+                       [(inc hcnt) lcnt]
+                       [hcnt (inc lcnt)])
+                     (if-let [module (get modules name)]
+                       (case (:type module)
+                         :flip (if high
+                                 [lhist ltodo]
+                                 (let [state (get lhist name)]
+                                   [(assoc lhist name (not state))
+                                    (concat ltodo
+                                            (mapv #(identity
+                                                    [name % (not state)])
+                                                  (:outputs module)))]))
+                         :conj (let [states (get lhist name)
+                                     nstates (assoc states src high)
+                                     signal (if (some false? (vals nstates))
+                                              true
+                                              false)]
+                                 [(assoc lhist name nstates)
+                                  (concat ltodo (mapv #(identity
+                                                        [name % signal])
+                                                      (:outputs module)))])
+                         :broadcast [lhist (concat ltodo
+                                                   (mapv #(identity
+                                                           [name % high])
+                                                         (:outputs module)))])
+                       [lhist ltodo])))
+                  [highcnt lowcnt hist []]
+                  todo)]
+             (recur new-hist new-todo cnt new-hcnt new-lcnt)))
+       (* highcnt lowcnt))))))
 
 (defn part-two
   ([] (part-two input-file-path))
   ([filename]
    (let [modules (parse-input filename)
          inputs (get-inputs modules)
-         sources (get inputs (first (get inputs "rx")))
-         counts (atom (into {} (map #(identity [% 0]) sources)))]
-     (reduce math/lcm
-      (loop [cnt 1
-             hist (get-history modules inputs)]
-        (if (some zero? (vals @counts))
-          (recur
-           (inc cnt)
-           (loop [[new-hist todo] [hist [[nil "broadcaster" false]]]]
-             (if (empty? todo)
-               new-hist
-               (recur
-                (reduce
-                 (fn [[lhist ltodo] [src name high]]
-                   (if (and (some #{name} sources)
-                            (not high)
-                            (= 0 (get @counts name)))
-                     (swap! counts #(assoc % name cnt))
-                     :default)
-                   (if-let [node (get modules name)]
-                     (case (:type node)
-                       :flip (if high
-                               [lhist ltodo]
-                               (let [state (get lhist name)]
-                                 [(assoc lhist name (not state))
-                                  (concat ltodo
-                                          (mapv #(identity
-                                                  [name % (not state)])
-                                                (:outputs node)))]))
-                       :conj (let [states (get lhist name)
-                                   nstates (assoc states src high)
-                                   signal (if (some false? (vals nstates))
-                                            true
-                                            false)]
-                               [(assoc lhist name nstates)
-                                (concat ltodo (mapv #(identity
-                                                      [name % signal])
-                                                    (:outputs node)))])
-                       :broadcast [lhist (concat ltodo
-                                                 (mapv #(identity
-                                                         [name % high])
-                                                       (:outputs node)))])
-                     [lhist ltodo]))
-                 [new-hist []]
-                 todo)))))
-          (vals @counts)))))))
+         sources (get inputs (first (get inputs "rx")))]
+     (loop [hist (get-history modules inputs)
+            todo [[nil "broadcaster" false]]
+            cnt 1
+            counts (into {} (map #(identity [% 0]) sources))]
+       (if (some zero? (vals counts))
+         (if (empty? todo)
+           (recur hist [[nil "broadcaster" false]] (inc cnt) counts)
+           (let [[new-counts new-hist new-todo]
+                 (reduce
+                  (fn [[lcounts lhist ltodo] [src name high]]
+                    (concat
+                     [(if (and (some #{name} sources)
+                               (not high)
+                               (= 0 (get lcounts name)))
+                        (assoc lcounts name cnt)
+                        lcounts)]
+                     (if-let [module (get modules name)]
+                       (case (:type module)
+                         :flip (if high
+                                 [lhist ltodo]
+                                 (let [state (get lhist name)]
+                                   [(assoc lhist name (not state))
+                                    (concat ltodo
+                                            (mapv #(identity
+                                                    [name % (not state)])
+                                                  (:outputs module)))]))
+                         :conj (let [states (get lhist name)
+                                     nstates (assoc states src high)
+                                     signal (if (some false? (vals nstates))
+                                              true
+                                              false)]
+                                 [(assoc lhist name nstates)
+                                  (concat ltodo (mapv #(identity
+                                                        [name % signal])
+                                                      (:outputs module)))])
+                         :broadcast [lhist (concat ltodo
+                                                   (mapv #(identity
+                                                           [name % high])
+                                                         (:outputs module)))])
+                       [lhist ltodo])))
+                  [counts hist []]
+                  todo)]
+             (recur new-hist new-todo cnt new-counts)))
+       (reduce math/lcm (vals counts)))))))
 
 (defn run
   []
