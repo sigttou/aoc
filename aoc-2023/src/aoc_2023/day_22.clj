@@ -6,27 +6,23 @@
 (def input-file-path "inputs/day_22/input")
 (def sample-file-path "inputs/day_22/sample-1")
 
-(defn get-brick
-  [idx line]
-  (let [[[sx sy sz] [ex ey ez]]
-        (map #(map parse-long (string/split % #",")) (string/split line #"~"))]
-    [sx sy sz ex ey ez idx]))
-
 (defn parse-input
   [filename]
-  (let [entries (string/split (slurp filename) #"\n")]
-    (keep-indexed get-brick entries)))
+  (->> (string/split (slurp filename) #"\n")
+       (mapv (fn [line] (vec (flatten (map #(map parse-long
+                                                 (string/split % #","))
+                                      (string/split line #"~"))))))))
 
 (defn get-positions
   [brick]
-  (let [[sx sy sz ex ey ez _] brick]
+  (let [[sx sy sz ex ey ez] brick]
     (vec (apply concat (mapv (fn [x]
                                (apply concat (mapv (fn [y]
                                                      (mapv (fn [z]
                                                              [x y z])
                                                            (range sz (inc ez))))
                                                    (range sy (inc ey)))))
-                        (range sx (inc ex)))))))
+                             (range sx (inc ex)))))))
 
 (defn step-down
   [brick]
@@ -35,14 +31,13 @@
 (defn fall
   [bricks]
   (reduce (fn [[fallen occupied] brick]
-            (loop [cur brick]
-              (let [nxt (step-down cur)]
-                (if (and (> (nth nxt 2) 0)
-                         (not (some #(get occupied %) (get-positions nxt))))
-                  (recur nxt)
-                  [(conj fallen cur)
-                   (reduce #(assoc %1 %2 cur)
-                           occupied (get-positions cur))]))))
+            (loop [cur brick
+                   nxt (step-down cur)]
+              (if (and (> (nth nxt 2) 0)
+                       (not (some #(get occupied %) (get-positions nxt))))
+                (recur nxt (step-down nxt))
+                [(conj fallen cur)
+                 (reduce #(assoc %1 %2 cur) occupied (get-positions cur))])))
           [[] {}]
           bricks))
 
