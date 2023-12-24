@@ -7,7 +7,8 @@
                  [org.clojure/math.numeric-tower "0.0.5"]
                  [org.clojure/math.combinatorics "0.2.0"]
                  [org.clojure/data.priority-map "1.1.0"]
-                 [net.mikera/core.matrix "0.63.0"]]
+                 [net.mikera/core.matrix "0.63.0"]
+                 [net.mikera/vectorz-clj "0.48.0"]]
   :main ^:skip-aot aoc-2023.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all
