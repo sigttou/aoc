@@ -94,7 +94,7 @@
                   [highcnt lowcnt hist []]
                   todo)]
              (recur new-hist new-todo cnt new-hcnt new-lcnt)))
-       (* highcnt lowcnt))))))
+         (* highcnt lowcnt))))))
 
 (defn part-two
   ([] (part-two input-file-path))
@@ -145,7 +145,7 @@
                   [counts hist []]
                   todo)]
              (recur new-hist new-todo cnt new-counts)))
-       (reduce math/lcm (vals counts)))))))
+         (reduce math/lcm (vals counts)))))))
 
 (defn run
   []

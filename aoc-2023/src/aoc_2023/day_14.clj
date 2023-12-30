@@ -83,7 +83,7 @@
                           field
                           (range 1000000000))))))
 
-  (defn run
-    []
-    (println (part-one))
-    (println (part-two)))
+(defn run
+  []
+  (println (part-one))
+  (println (part-two)))

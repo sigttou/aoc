@@ -10,8 +10,8 @@
     (map helpers/get-numbers entries)))
 
 (defn get-differences
- [num-list]
- (map #(- (second %) (first %)) (partition 2 1 num-list)))
+  [num-list]
+  (map #(- (second %) (first %)) (partition 2 1 num-list)))
 
 (defn get-differences-list
   [diff-list]
@@ -25,7 +25,7 @@
   (reduce (fn [val aoc-seq]
             (+ val (last aoc-seq)))
           (last (last diffs))
-         (reverse (butlast diffs))))
+          (reverse (butlast diffs))))
 
 (defn part-one
   ([] (part-one input-file-path))

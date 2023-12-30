@@ -18,8 +18,7 @@
     {:id card-id
      :win win-nums
      :my my-nums
-     :cnt 1})
-  )
+     :cnt 1}))
 
 (defn parse-input
   [filename]
@@ -32,8 +31,7 @@
               (conj my-wins num)
               my-wins))
           []
-          (:my card)
-  ))
+          (:my card)))
 
 (defn get-score
   [card]

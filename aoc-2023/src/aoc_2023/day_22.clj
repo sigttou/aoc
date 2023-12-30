@@ -11,7 +11,7 @@
   (->> (string/split (slurp filename) #"\n")
        (mapv (fn [line] (vec (flatten (map #(map parse-long
                                                  (string/split % #","))
-                                      (string/split line #"~"))))))))
+                                           (string/split line #"~"))))))))
 
 (defn get-positions
   [brick]

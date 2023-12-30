@@ -43,7 +43,10 @@
   (let [north (update pos :y inc)]
     (some #{field-get field north} [\| \7 \F])))
 
-(defn get-next                                                                                                                                                             [field pos dx dy]                                                                                                                                                        (let [dir (field-get field pos)]                                                                                                                                           (case dir
+(defn get-next
+  [field pos dx dy]
+  (let [dir (field-get field pos)]
+    (case dir
       \| (update pos :y #(+ dy %))
       \- (update pos :x #(+ dx %))
       \L (update (update pos :y #(+ % dx)) :x #(+ % dy))

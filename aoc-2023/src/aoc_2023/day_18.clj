@@ -16,11 +16,12 @@
   (->> (string/split (slurp filename) #"\n")
        (mapv #(string/split % #" "))
        (mapv #(identity
-              [(get DIRS (first (first %)))
-               (parse-long (second %))
-               [(read-string (apply str "0x" (take 5 (drop 2 (nth % 2)))))
-                (get DIRS (nth (keys DIRS)
-                     (read-string (str (last (take 8 (nth % 2)))))))]]))))
+               [(get DIRS (first (first %)))
+                (parse-long (second %))
+                [(read-string (apply str "0x" (take 5 (drop 2 (nth % 2)))))
+                 (get DIRS (nth (keys DIRS)
+                                (read-string (str (last
+                                                   (take 8 (nth % 2)))))))]]))))
 
 (defn gen-field
   [digplan part2]

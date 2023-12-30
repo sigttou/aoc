@@ -92,8 +92,7 @@
          min-in (first (filter #(and (check-in-ranges % seed-ranges) %)
                                (map #(reduce
                                       (fn [out rev-conv]
-                                               (apply-rev-converter out
-                                                                    rev-conv))
+                                        (apply-rev-converter out rev-conv))
                                       %
                                       rev-converters) (range))))]
      (reduce (fn [seed converter]

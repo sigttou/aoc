@@ -46,7 +46,7 @@
         d
         (let [dist (-> (f v) (remove-keys r) (map-vals (partial + d)))]
           (recur (merge-with min (pop q) dist) (assoc r v d))))
-        r)))
+      r)))
 
 (def DIRS [[0 1] [1 0] [0 -1] [-1 0]])
 (def DIR_IDXS {-1 [0 1 2 3]

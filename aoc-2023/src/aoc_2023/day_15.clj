@@ -44,11 +44,12 @@
 (defn score-boxes
   [boxes]
   (reduce (fn [score box-idx]
-            (+ score (reduce (fn [val [lens-idx entry]]
-                               (+ val (* (inc box-idx) (inc lens-idx)
-                                         (parse-long (second entry)))))
-                             0
-                             (keep-indexed #(identity %&)(get boxes box-idx)))))
+            (+ score (reduce
+                      (fn [val [lens-idx entry]]
+                        (+ val (* (inc box-idx) (inc lens-idx)
+                                  (parse-long (second entry)))))
+                      0
+                      (keep-indexed #(identity %&) (get boxes box-idx)))))
           0
           (range (count boxes))))
 

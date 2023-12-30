@@ -17,7 +17,7 @@
    \J 11
    \Q 12
    \K 13
-   \A 14 })
+   \A 14})
 
 (def card-types
   {'(1 1 1 1 1) 1
@@ -26,8 +26,7 @@
    '(1 1 3) 4
    '(2 3) 5
    '(1 4) 6
-   '(5) 7
-   })
+   '(5) 7})
 
 (defn get-hand-type
   [hand]
@@ -42,12 +41,11 @@
   [filename]
   (let [entries (string/split (slurp filename) #"\n")]
     (map (fn [entry]
-            (let [cards (into [] (map #(get card-values %)
-                                  (first (string/split entry #" "))))
-                  bid (parse-long (second (string/split entry #" ")))
-                  hand {:cards cards :bid bid :type nil}]
-              (get-hand-type hand))
-            ) entries)))
+           (let [cards (into [] (map #(get card-values %)
+                                     (first (string/split entry #" "))))
+                 bid (parse-long (second (string/split entry #" ")))
+                 hand {:cards cards :bid bid :type nil}]
+             (get-hand-type hand))) entries)))
 
 (defn part-one
   ([] (part-one input-file-path))
@@ -68,10 +66,13 @@
 
 (defn get-type-joker
   [hand]
-  (let [new-type (:type (last (sort-by :type (map #(get-hand-type
-                              (assoc hand :cards
-                                     (replace {0 %} (:cards hand))))
-                            (filter #(not (= 11 %)) (vals card-values))))))]
+  (let [new-type (:type
+                  (last (sort-by :type
+                                 (map #(get-hand-type
+                                        (assoc hand :cards
+                                               (replace {0 %} (:cards hand))))
+                                      (filter #(not (= 11 %))
+                                              (vals card-values))))))]
     (assoc hand :type new-type)))
 
 (defn part-two

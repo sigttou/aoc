@@ -11,11 +11,11 @@
 (defn get-index
   [s value from]
   (if-let [index (string/index-of s value from)]
-     (if (or (re-matches #"\d" (str (get s (dec index))))
-             (re-matches #"\d" (str (get s (+ index (count value))))))
-       (get-index s value (inc index))
-       index)
-     nil))
+    (if (or (re-matches #"\d" (str (get s (dec index))))
+            (re-matches #"\d" (str (get s (+ index (count value))))))
+      (get-index s value (inc index))
+      index)
+    nil))
 
 (defn get-pos-to-check
   [line num]
@@ -51,16 +51,15 @@
                                          (list (dec index) index (inc index))))
                                 (parse-long num)
                                 0)) (re-seq #"\d+" (get lines index)))))
-           0
-           (range (count lines))))))
+             0
+             (range (count lines))))))
 
 (defn get-pos-list
   [line re]
   (reduce (fn [pos entry]
             (if (re-matches re (str (second entry)))
               (conj pos (first entry))
-              pos)
-            )
+              pos))
           []
           (map-indexed vector line)))
 
@@ -90,17 +89,18 @@
         (reduce (fn [gearnums line-to-check]
                   (let [line (get lines line-to-check)
                         num-pos (get-num-pos line)
-                  check-nums (map vector (re-seq #"\d+" line) num-pos)
-                  checked-nums (filter (fn [entry]
-                                         (some true?
-                                               (map
-                                                #(and (>= %1 (dec gearpos))
-                                                      (<= %1 (inc gearpos)))
-                                                (second entry))))
-                                       check-nums)]
+                        check-nums (map vector (re-seq #"\d+" line) num-pos)
+                        checked-nums (filter
+                                      (fn [entry]
+                                        (some true?
+                                              (map
+                                               #(and (>= %1 (dec gearpos))
+                                                     (<= %1 (inc gearpos)))
+                                               (second entry))))
+                                      check-nums)]
                     (concat gearnums (map #(first %) checked-nums))))
-          []
-          (range (dec lineidx) (+ 2 lineidx)))]
+                []
+                (range (dec lineidx) (+ 2 lineidx)))]
     (if (= 2 (count to-ret))
       (apply * (map #(parse-long %) to-ret))
       0)))

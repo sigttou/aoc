@@ -44,11 +44,11 @@
   ([filename]
    (let [games (parse-input filename)]
      (reduce + (reduce (fn [possible-games game]
-                        (if (every? check-turn (second game))
-                          (conj possible-games (first game))
-                          possible-games))
-                      []
-                      games)))))
+                         (if (every? check-turn (second game))
+                           (conj possible-games (first game))
+                           possible-games))
+                       []
+                       games)))))
 
 (defn get-min
   [colour turn]

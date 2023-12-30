@@ -72,10 +72,10 @@
   [wps]
   (reduce (fn [out [x y]]
             (assoc out [x y] (filter some?
-                                  (for [[dx dy] [[0 1] [0 -1] [1 0] [-1 0]]]
-                                    (if (some  #{[(+ x dx) (+ y dy)]} wps)
-                                      [(+ x dx) (+ y dy)]
-                                      nil)))))
+                                     (for [[dx dy] [[0 1] [0 -1] [1 0] [-1 0]]]
+                                       (if (some  #{[(+ x dx) (+ y dy)]} wps)
+                                         [(+ x dx) (+ y dy)]
+                                         nil)))))
           {}
           wps))
 
@@ -106,10 +106,10 @@
   (if (= point end)
     dist
     (reduce max (for [[nxt c] (get neighs point)]
-                    (if (contains? seen nxt)
-                      best
-                      (longest-way neighs end nxt
-                                   (+ dist c) best (conj seen point)))))))
+                  (if (contains? seen nxt)
+                    best
+                    (longest-way neighs end nxt
+                                 (+ dist c) best (conj seen point)))))))
 
 (defn part-two
   "quite slow - tried to minimize following:

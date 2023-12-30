@@ -74,11 +74,11 @@
    (let [field (parse-input filename)
          starting-pos (get-starting-pos field)]
      (reduce max (pmap (fn [[[sx sy] [sdx sdy]]]
-                        (count (set
-                                (map first
-                                     (take-step field (set [])
-                                                [sx sy] [sdx sdy])))))
-                      starting-pos)))))
+                         (count (set
+                                 (map first
+                                      (take-step field (set [])
+                                                 [sx sy] [sdx sdy])))))
+                       starting-pos)))))
 
 (defn run
   []
