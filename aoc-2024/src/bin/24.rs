@@ -68,7 +68,32 @@ pub fn part_one(input: &str) -> Option<u64> {
     )
 }
 
+fn get_z_anomalies(
+    exprs: &HashMap<String, Operation>,
+    vals: &HashMap<String, bool>,
+) -> Vec<String> {
+    let mut ret = vals
+        .keys()
+        .filter(|x| x.starts_with("z"))
+        .filter(|x| {
+            let (_, op, _) = &exprs[&x.to_string()];
+            op.as_str() != "XOR"
+        })
+        .map(|x| x.to_string())
+        .collect::<Vec<_>>();
+    ret.pop();
+    ret
+}
+
 pub fn part_two(input: &str) -> Option<String> {
+    let (mut vals, exprs) = parse(input);
+    for e in exprs.keys() {
+        set_val(&exprs, &mut vals, e.to_string());
+    }
+    println!(
+        "Anomalies for Z gates to check in graph: {:?}",
+        get_z_anomalies(&exprs, &vals)
+    );
     if input.lines().count() < 100 {
         Some("z00,z01,z02,z05".to_string())
     } else {
