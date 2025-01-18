@@ -27,8 +27,8 @@ func (p pos) is_in_bounds(x_mx, y_mx int) bool {
 }
 
 func (p pos) get_pos_moves(x_mx, y_mx int) []pos {
-	moves := []pos{pos{1, 0}, pos{0, 1},
-		pos{0, -1}, pos{-1, 0}}
+	moves := []pos{{1, 0}, {0, 1},
+		{0, -1}, {-1, 0}}
 	valid := make([]pos, 0, 4)
 	for _, m := range moves {
 		new := p.add(m)
@@ -98,7 +98,7 @@ func (g grid) get_viable_pairs_cnt() int {
 func (g grid) get_shortest_path(from, to pos, illegal map[pos]bool) []pos {
 	x_mx, y_mx := g.getLimits()
 	// map with current positions and the path they have taken.
-	status := map[pos][]pos{from: []pos{}}
+	status := map[pos][]pos{from: {}}
 	visited := map[pos]bool{from: true}
 	for {
 		nxt_status := map[pos][]pos{}
