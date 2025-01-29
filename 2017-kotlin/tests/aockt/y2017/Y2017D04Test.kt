@@ -3,7 +3,7 @@ package aockt.y2017
 import io.github.jadarma.aockt.test.AdventDay
 import io.github.jadarma.aockt.test.AdventSpec
 
-@AdventDay(2017, 4, "Inverse Captcha")
+@AdventDay(2017, 4, "High-Entropy Passphrases")
 class Y2017D04Test : AdventSpec<Y2017D04>({
     val example = """
         aa bb cc dd ee

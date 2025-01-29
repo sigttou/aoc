@@ -3,7 +3,7 @@ package aockt.y2017
 import io.github.jadarma.aockt.test.AdventDay
 import io.github.jadarma.aockt.test.AdventSpec
 
-@AdventDay(2017, 3, "Inverse Captcha")
+@AdventDay(2017, 3, "Spiral Memory")
 class Y2017D03Test : AdventSpec<Y2017D03>({
     partOne {
         "1" shouldOutput 0
