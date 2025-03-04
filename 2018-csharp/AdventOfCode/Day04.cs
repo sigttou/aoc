@@ -96,7 +96,7 @@ namespace AdventOfCode
             }
 
             var mostFrequentGuardMinute = guardSleepMinutes
-                .SelectMany(kvp => kvp.Value.Select((count, minute) => new {Guard = kvp.Key, Minute = minute, Count = count}))
+                .SelectMany(kvp => kvp.Value.Select((count, minute) => new { Guard = kvp.Key, Minute = minute, Count = count }))
                 .OrderByDescending(x => x.Count)
                 .First();
 
@@ -105,7 +105,7 @@ namespace AdventOfCode
 
         private (DateTime Timestamp, string Action) ParseRecord(string record)
         {
-            var split = record.Split(new[] {'[', ']'}, StringSplitOptions.RemoveEmptyEntries);
+            var split = record.Split(new[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
             var timestamp = DateTime.Parse(split[0]);
             var action = split[1].Trim();
             return (timestamp, action);

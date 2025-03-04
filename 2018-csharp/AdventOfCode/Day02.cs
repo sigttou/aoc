@@ -35,7 +35,7 @@ namespace AdventOfCode
         public override ValueTask<string> Solve_2()
         {
             var boxIds = _input.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            
+
             for (int i = 0; i < boxIds.Length; i++)
             {
                 for (int j = i + 1; j < boxIds.Length; j++)
@@ -47,7 +47,7 @@ namespace AdventOfCode
                     }
                 }
             }
-            
+
             return new ValueTask<string>("No matching box IDs found");
         }
 
