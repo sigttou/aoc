@@ -351,3 +351,4 @@ MigrationBackup/
 
 # AOC - Inputs
 AdventOfCode/Inputs/*
+AdventOfCode/Outputs/*
