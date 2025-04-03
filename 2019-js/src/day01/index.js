@@ -54,4 +54,3 @@ run({
   trimTestInputs: true,
   onlyTests: false,
 });
-
