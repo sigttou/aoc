@@ -103,16 +103,16 @@
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "2356",
         "attempts": [],
-        "time": null
+        "time": 0.907001
       },
       "part2": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "PZEKB",
         "attempts": [],
-        "time": null
+        "time": 0.928152
       }
     },
     {
