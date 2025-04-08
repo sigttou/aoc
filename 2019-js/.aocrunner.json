@@ -145,16 +145,16 @@
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "2373",
         "attempts": [],
-        "time": null
+        "time": 21.397214
       },
       "part2": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "PCKRLPUK",
         "attempts": [],
-        "time": null
+        "time": 4.872891
       }
     },
     {
