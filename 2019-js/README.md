@@ -154,8 +154,8 @@ Both parts: 111.786ms
 ```
 Day 13
 Time part 1: 21.729ms
-Time part 2: -
-Both parts: 21.729ms
+Time part 2: 44.644ms
+Both parts: 66.373ms
 ```
 
 ```

@@ -1,3 +1,5 @@
+// day13/index.js
+
 import run from "aocrunner";
 import IntcodeComputer from "../utils/IntcodeComputer.js";
 
@@ -6,35 +8,44 @@ const parseInput = (rawInput) => rawInput.trim().split(",").map(Number);
 const part1 = (rawInput) => {
   const program = parseInput(rawInput);
   const computer = new IntcodeComputer(program);
-  const output = [];
+  const tiles = new Map();
 
   while (!computer.halted) {
-    const x = computer.runUntilOutput();
-    const y = computer.runUntilOutput();
-    const tileId = computer.runUntilOutput();
-    if (x === undefined || y === undefined || tileId === undefined) break;
-    output.push([x, y, tileId]);
+    const out = computer.run();
+    if (!out) break;
+    const [x, y, tile] = out;
+    tiles.set(`${x},${y}`, tile);
   }
 
-  const blockTiles = output.filter(([_, __, tile]) => tile === 2);
-  return blockTiles.length;
-};
-
-const renderScreen = (tiles, width = 44, height = 24) => {
-  const screen = Array.from({ length: height }, () => Array(width).fill(" "));
-  const tileChars = [" ", "█", "▒", "━", "●"];
-
-  for (const [x, y, tile] of tiles) {
-    if (y < height && x < width) {
-      screen[y][x] = tileChars[tile];
-    }
-  }
-
-  return screen.map((row) => row.join("")).join("\n");
+  return [...tiles.values()].filter((tile) => tile === 2).length;
 };
 
 const part2 = (rawInput) => {
-  return 16999;
+  const program = parseInput(rawInput);
+  program[0] = 2; // Free play
+  const computer = new IntcodeComputer(program);
+  const tiles = new Map();
+  let ballX = 0;
+  let paddleX = 0;
+  let score = 0;
+
+  const inputProvider = () => Math.sign(ballX - paddleX);
+
+  while (!computer.halted) {
+    const out = computer.run(inputProvider);
+    if (!out) break;
+    const [x, y, tile] = out;
+
+    if (x === -1 && y === 0) {
+      score = tile;
+    } else {
+      tiles.set(`${x},${y}`, tile);
+      if (tile === 3) paddleX = x;
+      if (tile === 4) ballX = x;
+    }
+  }
+
+  return score;
 };
 
 run({
