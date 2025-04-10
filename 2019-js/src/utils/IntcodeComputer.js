@@ -52,8 +52,7 @@ export default class IntcodeComputer {
         case 4:
           this.output.push(get(1));
           this.ip += 2;
-          if (this.output.length === 3) return this.output.splice(0, 3);
-          break;
+          return this.output.pop();
         case 5:
           this.ip = get(1) !== 0 ? get(2) : this.ip + 3;
           break;
