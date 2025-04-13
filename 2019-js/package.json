@@ -18,7 +18,9 @@
     "aocrunner": "^1.10.0",
     "prettier": "^2.8.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "js-priority-queue": "^0.1.5"
+  },
   "engines": {
     "node": ">=16.13.0"
   }
