@@ -301,16 +301,16 @@
     },
     {
       "part1": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "4684",
         "attempts": [],
-        "time": null
+        "time": 0.539017
       },
       "part2": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "452290953297",
         "attempts": [],
-        "time": null
+        "time": 2.185694
       }
     },
     {
