@@ -1,146 +1,125 @@
-// src/lib/intcode.js
 export default class IntcodeComputer {
-  constructor(program) {
+  constructor(program, inputFn = () => 0, outputFn = () => {}) {
     this.memory = [...program];
-    this.pointer = 0n;
-    this.relativeBase = 0n;
-    this.inputs = [];
-    this.outputs = [];
+    this.inputFn = inputFn;
+    this.outputFn = outputFn;
+    this.ip = 0;
+    this.relativeBase = 0;
     this.halted = false;
-    this.waitingForInput = false;
   }
 
-  cloneMemory() {
-    const mem = {};
-    for (let i = 0; i < this.memory.length; i++) {
-      mem[BigInt(i)] = BigInt(this.memory[i]);
-    }
-    return mem;
+  get(addr) {
+    return this.memory[addr] ?? 0;
   }
 
-  getValue(address) {
-    return this.memory[address] ?? 0n;
+  set(addr, value) {
+    this.memory[addr] = value;
   }
 
-  setValue(address, value) {
-    this.memory[address] = value;
+  getParam(mode, offset) {
+    const val = this.get(this.ip + offset);
+    if (mode === 0) return this.get(val);
+    if (mode === 1) return val;
+    if (mode === 2) return this.get(this.relativeBase + val);
+    throw new Error(`Unknown mode ${mode}`);
   }
 
-  input(value) {
-    this.inputs.push(BigInt(value));
-    this.waitingForInput = false;
+  getWriteAddr(mode, offset) {
+    const val = this.get(this.ip + offset);
+    if (mode === 0) return val;
+    if (mode === 2) return this.relativeBase + val;
+    throw new Error(`Unknown write mode ${mode}`);
   }
 
-  output() {
-    return this.outputs.shift();
-  }
-
-  hasOutput() {
-    return this.outputs.length > 0;
-  }
-
-  isHalted() {
-    return this.halted;
-  }
-
-  runUntilOutput(limit = Infinity) {
-    let outputCount = 0;
-
-    while (!this.halted && outputCount < limit) {
-      const instruction = this.getValue(this.pointer)
+  run() {
+    while (!this.halted) {
+      const opcode = this.get(this.ip) % 100;
+      const modes = Math.floor(this.get(this.ip) / 100)
         .toString()
-        .padStart(5, "0");
-      const opcode = Number(instruction.slice(-2));
-      const modes = instruction.slice(0, 3).split("").reverse().map(Number);
-
-      const getParam = (i) => {
-        const val = this.getValue(this.pointer + BigInt(i));
-        if (modes[i - 1] === 0) return this.getValue(val); // position
-        if (modes[i - 1] === 1) return val; // immediate
-        if (modes[i - 1] === 2) return this.getValue(this.relativeBase + val); // relative
-      };
-
-      const getWriteAddress = (i) => {
-        const val = this.getValue(this.pointer + BigInt(i));
-        if (modes[i - 1] === 2) return this.relativeBase + val;
-        return val;
-      };
+        .padStart(3, "0")
+        .split("")
+        .reverse()
+        .map(Number);
 
       switch (opcode) {
         case 1: {
           // add
-          const a = getParam(1);
-          const b = getParam(2);
-          this.setValue(getWriteAddress(3), a + b);
-          this.pointer += 4n;
+          const a = this.getParam(modes[0], 1);
+          const b = this.getParam(modes[1], 2);
+          const addr = this.getWriteAddr(modes[2], 3);
+          this.set(addr, a + b);
+          this.ip += 4;
           break;
         }
         case 2: {
           // multiply
-          const a = getParam(1);
-          const b = getParam(2);
-          this.setValue(getWriteAddress(3), a * b);
-          this.pointer += 4n;
+          const a = this.getParam(modes[0], 1);
+          const b = this.getParam(modes[1], 2);
+          const addr = this.getWriteAddr(modes[2], 3);
+          this.set(addr, a * b);
+          this.ip += 4;
           break;
         }
         case 3: {
           // input
-          if (this.inputs.length === 0) {
-            this.waitingForInput = true;
-            return;
-          }
-          this.setValue(getWriteAddress(1), this.inputs.shift());
-          this.pointer += 2n;
+          const addr = this.getWriteAddr(modes[0], 1);
+          const input = this.inputFn();
+          if (input === undefined || input === null) return; // pause execution
+          this.set(addr, input);
+          this.ip += 2;
           break;
         }
         case 4: {
           // output
-          this.outputs.push(getParam(1));
-          this.pointer += 2n;
-          outputCount++;
+          const value = this.getParam(modes[0], 1);
+          this.outputFn(value);
+          this.ip += 2;
           break;
         }
         case 5: {
           // jump-if-true
-          const a = getParam(1);
-          const b = getParam(2);
-          this.pointer = a !== 0n ? b : this.pointer + 3n;
+          const a = this.getParam(modes[0], 1);
+          const b = this.getParam(modes[1], 2);
+          this.ip = a !== 0 ? b : this.ip + 3;
           break;
         }
         case 6: {
           // jump-if-false
-          const a = getParam(1);
-          const b = getParam(2);
-          this.pointer = a === 0n ? b : this.pointer + 3n;
+          const a = this.getParam(modes[0], 1);
+          const b = this.getParam(modes[1], 2);
+          this.ip = a === 0 ? b : this.ip + 3;
           break;
         }
         case 7: {
           // less than
-          const a = getParam(1);
-          const b = getParam(2);
-          this.setValue(getWriteAddress(3), a < b ? 1n : 0n);
-          this.pointer += 4n;
+          const a = this.getParam(modes[0], 1);
+          const b = this.getParam(modes[1], 2);
+          const addr = this.getWriteAddr(modes[2], 3);
+          this.set(addr, a < b ? 1 : 0);
+          this.ip += 4;
           break;
         }
         case 8: {
           // equals
-          const a = getParam(1);
-          const b = getParam(2);
-          this.setValue(getWriteAddress(3), a === b ? 1n : 0n);
-          this.pointer += 4n;
+          const a = this.getParam(modes[0], 1);
+          const b = this.getParam(modes[1], 2);
+          const addr = this.getWriteAddr(modes[2], 3);
+          this.set(addr, a === b ? 1 : 0);
+          this.ip += 4;
           break;
         }
         case 9: {
           // adjust relative base
-          this.relativeBase += getParam(1);
-          this.pointer += 2n;
+          const a = this.getParam(modes[0], 1);
+          this.relativeBase += a;
+          this.ip += 2;
           break;
         }
         case 99: // halt
           this.halted = true;
           return;
         default:
-          throw new Error(`Unknown opcode: ${opcode} at ${this.pointer}`);
+          throw new Error(`Unknown opcode ${opcode} at ${this.ip}`);
       }
     }
   }
