@@ -2,3 +2,4 @@
 config.php
 update.sh
 *.cache
+*input.txt
