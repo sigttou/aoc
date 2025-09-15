@@ -3,3 +3,4 @@ config.php
 update.sh
 *.cache
 *input.txt
+*/Day_*/description.txt
