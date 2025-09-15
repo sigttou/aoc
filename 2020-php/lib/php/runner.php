@@ -25,7 +25,8 @@ function run(string $codeFile): void
     newLine(2);
 }
 
-function runWithExitCode(string $codeFile): int {
+function runWithExitCode(string $codeFile): int
+{
     $binary = getBinaryPathByFilename($codeFile);
 
     write(

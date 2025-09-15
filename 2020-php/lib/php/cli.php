@@ -6,7 +6,7 @@ define('CLI_SUCCESS', 0);
 define('CLI_FAILURE', 1);
 
 set_exception_handler(
-    static fn(Throwable $ex) => writeln('Error message: ' . $ex->getMessage()) && exit(CLI_FAILURE)
+    static fn (Throwable $ex) => writeln('Error message: ' . $ex->getMessage()) && exit(CLI_FAILURE)
 );
 
 function write(string $message): void
