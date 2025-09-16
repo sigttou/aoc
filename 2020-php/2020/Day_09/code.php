@@ -38,7 +38,9 @@ function part02(array $input)
                 $range = array_slice($numbers, $start, $end - $start + 1);
                 return min($range) + max($range);
             }
-            if ($sum > $target) break;
+            if ($sum > $target) {
+                break;
+            }
         }
     }
     return null;

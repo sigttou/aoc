@@ -12,7 +12,9 @@ function part01(array $input)
     $visited = [];
     $instructions = array_map('trim', $input);
     while ($ip < count($instructions)) {
-        if (isset($visited[$ip])) break;
+        if (isset($visited[$ip])) {
+            break;
+        }
         $visited[$ip] = true;
         list($op, $arg) = explode(' ', $instructions[$ip]);
         $arg = (int)$arg;
@@ -44,7 +46,9 @@ function part02(array $input)
         $ip = 0;
         $visited = [];
         while ($ip < count($instructions)) {
-            if (isset($visited[$ip])) break;
+            if (isset($visited[$ip])) {
+                break;
+            }
             $visited[$ip] = true;
             list($op, $arg) = explode(' ', $instructions[$ip]);
             $arg = (int)$arg;
