@@ -39,9 +39,13 @@ function part02(array $input)
             $addrBin = str_pad(decbin($addr), 36, '0', STR_PAD_LEFT);
             $floating = '';
             for ($i = 0; $i < 36; $i++) {
-                if ($mask[$i] === '0') $floating .= $addrBin[$i];
-                elseif ($mask[$i] === '1') $floating .= '1';
-                else $floating .= 'X';
+                if ($mask[$i] === '0') {
+                    $floating .= $addrBin[$i];
+                } elseif ($mask[$i] === '1') {
+                    $floating .= '1';
+                } else {
+                    $floating .= 'X';
+                }
             }
             $addrs = expandFloating($floating);
             foreach ($addrs as $a) {
@@ -52,7 +56,8 @@ function part02(array $input)
     return array_sum($mem);
 }
 
-function expandFloating($addr) {
+function expandFloating($addr)
+{
     $results = [''];
     for ($i = 0; $i < strlen($addr); $i++) {
         $next = [];
