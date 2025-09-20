@@ -1,0 +1,5 @@
+.env
+Gemfile.lock
+.bundle
+challenges/*/*/input.txt
+challenges/*/*/*.md
