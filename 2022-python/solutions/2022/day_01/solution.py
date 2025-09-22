@@ -12,8 +12,7 @@ class Solution(TextSolution):
     def _parse_elves(self):
         # Split input by double newlines, then sum each elf's calories
         return [
-            sum(map(int, elf.splitlines()))
-            for elf in self.input.strip().split("\n\n")
+            sum(map(int, elf.splitlines())) for elf in self.input.strip().split("\n\n")
         ]
 
     @answer(69501)
