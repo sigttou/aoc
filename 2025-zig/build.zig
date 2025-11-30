@@ -41,7 +41,7 @@ pub fn build(b: *Build) error{OutOfMemory}!void {
     const year = b.option(
         []const u8,
         "year",
-        b.fmt("Solution directory (default: {s})", .{ current_year }),
+        b.fmt("Solution directory (default: {s})", .{current_year}),
     ) orelse current_year;
     const timer = b.option(
         bool,
@@ -110,10 +110,10 @@ pub fn build(b: *Build) error{OutOfMemory}!void {
                 test_step.dependOn(&day_test.step);
             }
         } else |err| {
-            const fail = b.addFail( switch (err) {
+            const fail = b.addFail(switch (err) {
                 error.OutOfMemory => |e| return e,
-                error.Overflow => b.fmt("Out-of-range integer in string '{s}'", .{ days_string }),
-                error.InvalidCharacter => b.fmt("Invalid range string '{s}'", .{ days_string }),
+                error.Overflow => b.fmt("Out-of-range integer in string '{s}'", .{days_string}),
+                error.InvalidCharacter => b.fmt("Invalid range string '{s}'", .{days_string}),
             });
             run_step.dependOn(&fail.step);
             test_step.dependOn(&fail.step);
@@ -134,7 +134,7 @@ fn parseIntRange(
     allocator: Allocator,
     string: []const u8,
     comptime T: type,
-) (fmt.ParseIntError||Allocator.Error)![]const T {
+) (fmt.ParseIntError || Allocator.Error)![]const T {
     const dot_index: ?usize = for (string, 0..) |char, i| {
         if (char == '.') break i;
     } else null;
@@ -145,11 +145,11 @@ fn parseIntRange(
             const list = try allocator.alloc(T, int);
             for (list, 1..) |*day, i| day.* = @intCast(i);
             return list;
-        } else if (string.len > first_dot_index+2 and string[first_dot_index+1] == '.') {
+        } else if (string.len > first_dot_index + 2 and string[first_dot_index + 1] == '.') {
             const first = try fmt.parseUnsigned(T, string[0..first_dot_index], 10);
-            const last = try fmt.parseUnsigned(T, string[first_dot_index+2..], 10);
+            const last = try fmt.parseUnsigned(T, string[first_dot_index + 2 ..], 10);
             if (last > first) {
-                const list = try allocator.alloc(T, last-first+1);
+                const list = try allocator.alloc(T, last - first + 1);
                 for (list, first..) |*day, i| day.* = @intCast(i);
                 return list;
             } else {
@@ -169,7 +169,7 @@ fn parseIntRange(
 test parseIntRange {
     const allocator = testing.allocator;
     {
-        const expected: []const u8 = &.{ 82 };
+        const expected: []const u8 = &.{82};
         const actual: []const u8 = try parseIntRange(allocator, "82", u8);
         try testing.expectEqualDeep(expected, actual);
         allocator.free(actual);
