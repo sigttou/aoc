@@ -5,7 +5,6 @@ pub fn part1(input: []const u8) [:0]const u8 {
     var ranges = std.mem.splitScalar(u8, input, ',');
     while (ranges.next()) |range| {
         const trimmed = std.mem.trim(u8, range, " \n\r\t");
-        if (trimmed.len == 0) continue;
 
         var parts = std.mem.splitScalar(u8, trimmed, '-');
         const start_str = parts.next() orelse continue;
@@ -72,13 +71,11 @@ fn isInvalidIdPart2(id: i64) bool {
 }
 
 pub fn part2(input: []u8) !i64 {
-    const allocator = std.heap.page_allocator;
     var sum: i64 = 0;
 
     var ranges = std.mem.splitScalar(u8, input, ',');
     while (ranges.next()) |range| {
         const trimmed = std.mem.trim(u8, range, " \n\r\t");
-        if (trimmed.len == 0) continue;
 
         var parts = std.mem.splitScalar(u8, trimmed, '-');
         const start_str = parts.next() orelse continue;
@@ -95,7 +92,6 @@ pub fn part2(input: []u8) !i64 {
         }
     }
 
-    _ = allocator;
     return sum;
 }
 
