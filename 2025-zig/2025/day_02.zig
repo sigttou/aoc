@@ -1,8 +1,7 @@
-pub fn part1(input: []const u8) [:0]const u8 {
-    const allocator = std.heap.page_allocator;
+pub fn part1(input: []const u8) i64 {
     var sum: i64 = 0;
 
-    var ranges = std.mem.splitScalar(u8, input, ',');
+    var ranges = std.mem.tokenizeSequence(u8, input, ",");
     while (ranges.next()) |range| {
         const trimmed = std.mem.trim(u8, range, " \n\r\t");
 
@@ -21,10 +20,7 @@ pub fn part1(input: []const u8) [:0]const u8 {
         }
     }
 
-    var buf: [64]u8 = undefined;
-    const result = std.fmt.bufPrintZ(&buf, "{d}", .{sum}) catch unreachable;
-    const result_copy = allocator.dupeZ(u8, result) catch unreachable;
-    return result_copy;
+    return sum;
 }
 
 fn isInvalidIdPart1(id: i64) bool {
@@ -73,7 +69,7 @@ fn isInvalidIdPart2(id: i64) bool {
 pub fn part2(input: []u8) !i64 {
     var sum: i64 = 0;
 
-    var ranges = std.mem.splitScalar(u8, input, ',');
+    var ranges = std.mem.tokenizeSequence(u8, input, ",");
     while (ranges.next()) |range| {
         const trimmed = std.mem.trim(u8, range, " \n\r\t");
 

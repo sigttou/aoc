@@ -1,10 +1,8 @@
 pub fn part1(input: []const u8) !i64 {
     var sum: i64 = 0;
 
-    var lines = std.mem.splitScalar(u8, input, '\n');
+    var lines = std.mem.tokenizeSequence(u8, input, "\n");
     while (lines.next()) |line| {
-        if (line.len < 2) continue;
-
         const max_joltage = findMaxJoltage(line);
         sum += max_joltage;
     }
@@ -38,10 +36,8 @@ pub fn part2(input: []u8) !i128 {
     const allocator = std.heap.page_allocator;
     var sum: i128 = 0;
 
-    var lines = std.mem.splitScalar(u8, input, '\n');
+    var lines = std.mem.tokenizeSequence(u8, input, "\n");
     while (lines.next()) |line| {
-        if (line.len < 12) continue;
-
         const max_joltage = findMaxJoltage12(line, allocator);
         sum += max_joltage;
     }
