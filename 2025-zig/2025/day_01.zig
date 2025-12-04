@@ -2,7 +2,7 @@ pub fn part1(input: []const u8) [:0]const u8 {
     var position: i32 = 50;
     var count: u32 = 0;
 
-    var lines = std.mem.tokenizeSequence(u8, input, "\n");
+    var lines = std.mem.tokenizeScalar(u8, input, '\n');
     while (lines.next()) |line| {
         const direction = line[0];
         const distance = std.fmt.parseInt(i32, line[1..], 10) catch continue;
@@ -32,7 +32,7 @@ pub fn part2(input: []u8) !i32 {
     var position: i32 = 50;
     var count: i32 = 0;
 
-    var lines = std.mem.tokenizeSequence(u8, input, "\n");
+    var lines = std.mem.tokenizeScalar(u8, input, '\n');
     while (lines.next()) |line| {
         const direction = line[0];
         const distance = std.fmt.parseInt(i32, line[1..], 10) catch continue;

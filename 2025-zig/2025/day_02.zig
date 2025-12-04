@@ -1,7 +1,7 @@
 pub fn part1(input: []const u8) i64 {
     var sum: i64 = 0;
 
-    var ranges = std.mem.tokenizeSequence(u8, input, ",");
+    var ranges = std.mem.tokenizeScalar(u8, input, ',');
     while (ranges.next()) |range| {
         const trimmed = std.mem.trim(u8, range, " \n\r\t");
 
@@ -69,7 +69,7 @@ fn isInvalidIdPart2(id: i64) bool {
 pub fn part2(input: []u8) !i64 {
     var sum: i64 = 0;
 
-    var ranges = std.mem.tokenizeSequence(u8, input, ",");
+    var ranges = std.mem.tokenizeScalar(u8, input, ',');
     while (ranges.next()) |range| {
         const trimmed = std.mem.trim(u8, range, " \n\r\t");
 
