@@ -1,5 +1,5 @@
 import run from "aocrunner";
-import { IntcodeComputer } from "../utils/IntcodeComputer.js";
+import IntcodeComputer from "../utils/IntcodeComputer.js";
 
 const parseInput = (rawInput) =>
   rawInput.split(",").map((n) => Number(n.trim()));
@@ -22,8 +22,13 @@ const isScaffold = (grid, x, y) =>
 
 const part1 = (rawInput) => {
   const input = parseInput(rawInput);
-  const computer = new IntcodeComputer(input);
-  const output = computer.run();
+  const output = [];
+  const computer = new IntcodeComputer(
+    input,
+    () => 0,
+    (value) => output.push(value),
+  );
+  computer.run();
   const grid = toAsciiGrid(output);
 
   let sum = 0;
@@ -62,8 +67,14 @@ const part2 = (rawInput) => {
     10,
   ]);
 
-  const computer = new IntcodeComputer(input);
-  const output = computer.run(movementAscii);
+  const inputQueue = [...movementAscii];
+  const output = [];
+  const computer = new IntcodeComputer(
+    input,
+    () => inputQueue.shift(),
+    (value) => output.push(value),
+  );
+  computer.run();
 
   return output.at(-1);
 };

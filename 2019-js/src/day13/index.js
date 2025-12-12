@@ -7,44 +7,55 @@ const parseInput = (rawInput) => rawInput.trim().split(",").map(Number);
 
 const part1 = (rawInput) => {
   const program = parseInput(rawInput);
-  const computer = new IntcodeComputer(program);
   const tiles = new Map();
+  const outputs = [];
 
-  while (!computer.halted) {
-    const out = computer.run();
-    if (!out) break;
-    const [x, y, tile] = out;
-    tiles.set(`${x},${y}`, tile);
-  }
+  const computer = new IntcodeComputer(
+    program,
+    () => 0,
+    (value) => {
+      outputs.push(value);
+      if (outputs.length === 3) {
+        const [x, y, tile] = outputs;
+        outputs.length = 0;
+        tiles.set(`${x},${y}`, tile);
+      }
+    },
+  );
 
+  computer.run();
   return [...tiles.values()].filter((tile) => tile === 2).length;
 };
 
 const part2 = (rawInput) => {
   const program = parseInput(rawInput);
   program[0] = 2; // Free play
-  const computer = new IntcodeComputer(program);
   const tiles = new Map();
   let ballX = 0;
   let paddleX = 0;
   let score = 0;
+  const outputs = [];
 
-  const inputProvider = () => Math.sign(ballX - paddleX);
+  const computer = new IntcodeComputer(
+    program,
+    () => Math.sign(ballX - paddleX),
+    (value) => {
+      outputs.push(value);
+      if (outputs.length === 3) {
+        const [x, y, tile] = outputs;
+        outputs.length = 0;
+        if (x === -1 && y === 0) {
+          score = tile;
+        } else {
+          tiles.set(`${x},${y}`, tile);
+          if (tile === 3) paddleX = x;
+          if (tile === 4) ballX = x;
+        }
+      }
+    },
+  );
 
-  while (!computer.halted) {
-    const out = computer.run(inputProvider);
-    if (!out) break;
-    const [x, y, tile] = out;
-
-    if (x === -1 && y === 0) {
-      score = tile;
-    } else {
-      tiles.set(`${x},${y}`, tile);
-      if (tile === 3) paddleX = x;
-      if (tile === 4) ballX = x;
-    }
-  }
-
+  computer.run();
   return score;
 };
 

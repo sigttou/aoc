@@ -4,15 +4,19 @@ import IntcodeComputer from "../utils/IntcodeComputer.js"; // assumes you saved 
 const parseInput = (rawInput) => rawInput.trim().split(",").map(Number);
 
 function runSpringscript(program, script) {
-  const computer = new IntcodeComputer(program);
-  const input = script
+  const inputQueue = script
     .trim()
     .split("\n")
     .map((line) => [...line, "\n"])
     .flat()
     .map((char) => char.charCodeAt(0));
-  computer.run(input);
-  const output = computer.output;
+  const output = [];
+  const computer = new IntcodeComputer(
+    program,
+    () => inputQueue.shift(),
+    (value) => output.push(value),
+  );
+  computer.run();
   const last = output[output.length - 1];
   const ascii = output
     .slice(0, -1)

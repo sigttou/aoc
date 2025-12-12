@@ -3,68 +3,81 @@ import IntcodeComputer from "../utils/IntcodeComputer.js";
 
 const NUM_COMPUTERS = 50;
 
-const parseInput = (rawInput) => rawInput.trim().split(",").map(BigInt);
+const parseInput = (rawInput) => rawInput.trim().split(",").map(Number);
 
 const runNetwork = (program, part) => {
-  const computers = [];
-  const queues = Array.from({ length: NUM_COMPUTERS }, () => []);
-  const idle = Array(NUM_COMPUTERS).fill(false);
+  const inputQueues = Array.from({ length: NUM_COMPUTERS }, (_, i) => [i]);
+  const outputBuffers = Array.from({ length: NUM_COMPUTERS }, () => []);
+  const sentMinus1 = Array(NUM_COMPUTERS).fill(false);
   let nat = null;
   let lastNatY = null;
 
-  // Initialize computers with their address
+  const computers = [];
   for (let i = 0; i < NUM_COMPUTERS; i++) {
-    const computer = new IntcodeComputer(program);
-    computer.input(i);
+    const idx = i;
+    const computer = new IntcodeComputer(
+      [...program],
+      () => {
+        if (inputQueues[idx].length > 0) {
+          sentMinus1[idx] = false;
+          return inputQueues[idx].shift();
+        }
+        if (!sentMinus1[idx]) {
+          sentMinus1[idx] = true;
+          return -1;
+        }
+        return undefined; // pause
+      },
+      (value) => {
+        outputBuffers[idx].push(value);
+        if (outputBuffers[idx].length === 3) {
+          const [dest, x, y] = outputBuffers[idx];
+          outputBuffers[idx].length = 0;
+          if (dest === 255) {
+            if (part === 1) {
+              throw { result: y };
+            } else {
+              nat = [x, y];
+            }
+          } else if (dest >= 0 && dest < NUM_COMPUTERS) {
+            inputQueues[dest].push(x, y);
+          }
+        }
+      },
+    );
     computers.push(computer);
   }
 
-  while (true) {
-    let activity = false;
+  try {
+    while (true) {
+      let anyActivity = false;
 
-    for (let i = 0; i < NUM_COMPUTERS; i++) {
-      const comp = computers[i];
-
-      if (queues[i].length === 0) {
-        comp.input(-1);
-      } else {
-        const [x, y] = queues[i].shift();
-        comp.input(x);
-        comp.input(y);
+      // Reset flags and run each computer
+      for (let i = 0; i < NUM_COMPUTERS; i++) {
+        sentMinus1[i] = false;
       }
 
-      comp.runUntilOutput();
-
-      while (comp.hasOutput()) {
-        const dest = Number(comp.output());
-        const x = comp.output();
-        const y = comp.output();
-
-        activity = true;
-
-        if (dest === 255) {
-          if (part === 1) {
-            return y.toString();
-          } else {
-            nat = [x, y];
-          }
-        } else if (dest >= 0 && dest < NUM_COMPUTERS) {
-          queues[dest].push([x, y]);
-        }
+      for (let i = 0; i < NUM_COMPUTERS; i++) {
+        const prevIp = computers[i].ip;
+        const hadInput = inputQueues[i].length > 0;
+        computers[i].run();
+        if (computers[i].ip !== prevIp || hadInput) anyActivity = true;
       }
-    }
 
-    // Part 2: check if all queues are empty and no computers were active
-    if (part === 2 && !activity && queues.every((q) => q.length === 0)) {
-      if (nat) {
+      // Check for idle state in part 2
+      if (part === 2 && !anyActivity && nat) {
         const [x, y] = nat;
-        queues[0].push([x, y]);
+        inputQueues[0].push(x, y);
         if (y === lastNatY) {
-          return y.toString();
+          return y;
         }
         lastNatY = y;
+        anyActivity = true;
       }
     }
+  } catch (e) {
+    if (e.result !== undefined) return e.result;
+    throw e;
   }
 };
 

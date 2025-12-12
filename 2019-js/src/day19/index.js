@@ -9,11 +9,17 @@ const part1 = (rawInput) => {
 
   for (let y = 0; y < 50; y++) {
     for (let x = 0; x < 50; x++) {
-      const computer = new IntcodeComputer(program);
-      computer.addInput(x);
-      computer.addInput(y);
+      const inputQueue = [x, y];
+      let output = 0;
+      const computer = new IntcodeComputer(
+        [...program],
+        () => inputQueue.shift(),
+        (value) => {
+          output = value;
+        },
+      );
       computer.run();
-      affected += computer.getOutput()[0];
+      affected += output;
     }
   }
 
@@ -24,11 +30,17 @@ const part2 = (rawInput) => {
   const program = parseInput(rawInput);
 
   const isPulled = (x, y) => {
-    const computer = new IntcodeComputer(program);
-    computer.addInput(x);
-    computer.addInput(y);
+    const inputQueue = [x, y];
+    let output = 0;
+    const computer = new IntcodeComputer(
+      [...program],
+      () => inputQueue.shift(),
+      (value) => {
+        output = value;
+      },
+    );
     computer.run();
-    return computer.getOutput()[0] === 1;
+    return output === 1;
   };
 
   let y = 100;

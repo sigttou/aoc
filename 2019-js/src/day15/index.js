@@ -17,14 +17,14 @@ const explore = (program) => {
   const visited = new Map();
   const start = { x: 0, y: 0 };
   const queue = [
-    { ...start, path: [], computer: new IntcodeComputer(program) },
+    { ...start, path: [], memory: [...program], ip: 0, relativeBase: 0 },
   ];
 
   visited.set(key(0, 0), ".");
   let oxygenSystem = null;
 
   while (queue.length) {
-    const { x, y, path, computer } = queue.shift();
+    const { x, y, path, memory, ip, relativeBase } = queue.shift();
 
     for (const { dx, dy, command } of directions) {
       const nx = x + dx;
@@ -32,19 +32,33 @@ const explore = (program) => {
       const posKey = key(nx, ny);
       if (visited.has(posKey)) continue;
 
-      const newComputer = new IntcodeComputer([...computer.memory]);
-      newComputer.ip = computer.ip;
-      newComputer.relativeBase = computer.relativeBase;
-      newComputer.input = [...computer.input, command];
+      let output = null;
+      const inputQueue = [command];
+      const newComputer = new IntcodeComputer(
+        [...memory],
+        () => inputQueue.shift(),
+        (value) => {
+          output = value;
+        },
+      );
+      newComputer.ip = ip;
+      newComputer.relativeBase = relativeBase;
 
-      const output = newComputer.run(() => newComputer.input.shift());
+      newComputer.run();
 
       if (output === 0) {
         visited.set(posKey, "#");
       } else {
         visited.set(posKey, output === 2 ? "O" : ".");
         const newPath = [...path, command];
-        queue.push({ x: nx, y: ny, path: newPath, computer: newComputer });
+        queue.push({
+          x: nx,
+          y: ny,
+          path: newPath,
+          memory: [...newComputer.memory],
+          ip: newComputer.ip,
+          relativeBase: newComputer.relativeBase,
+        });
         if (output === 2) {
           oxygenSystem = { x: nx, y: ny, path: newPath };
         }

@@ -13,28 +13,30 @@ const DIRECTIONS = [
 const key = (x, y) => `${x},${y}`;
 
 const paintHull = (program, startColor = 0) => {
-  const computer = new IntcodeComputer(program);
   let x = 0,
     y = 0,
     dir = 0;
   const panels = new Map();
   panels.set(key(x, y), startColor);
 
-  while (!computer.halted) {
-    const color = panels.get(key(x, y)) || 0;
-    computer.provideInput(color);
-    const paint = computer.runUntilOutput();
-    const turn = computer.runUntilOutput();
+  const outputs = [];
+  const computer = new IntcodeComputer(
+    program,
+    () => panels.get(key(x, y)) || 0,
+    (value) => {
+      outputs.push(value);
+      if (outputs.length === 2) {
+        const [paint, turn] = outputs;
+        outputs.length = 0;
+        panels.set(key(x, y), paint);
+        dir = (dir + (turn === 0 ? 3 : 1)) % 4;
+        x += DIRECTIONS[dir][0];
+        y += DIRECTIONS[dir][1];
+      }
+    },
+  );
 
-    if (paint === undefined || turn === undefined) break;
-
-    panels.set(key(x, y), paint);
-
-    dir = (dir + (turn === 0 ? 3 : 1)) % 4;
-    x += DIRECTIONS[dir][0];
-    y += DIRECTIONS[dir][1];
-  }
-
+  computer.run();
   return panels;
 };
 
