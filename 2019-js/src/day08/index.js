@@ -65,7 +65,7 @@ run({
     tests: [
       {
         input: `123456789012`,
-        expected: 1 * 2,
+        expected: 1 * 4,
       },
     ],
     solution: part1,
@@ -74,7 +74,7 @@ run({
     tests: [
       {
         input: `0222112222120000`,
-        expected: `█ \n █`,
+        expected: `██    █`,
       },
     ],
     solution: part2,
