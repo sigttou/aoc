@@ -41,8 +41,6 @@ public class Day17 : BaseDay
 
         ymin = clay.Min(p => p.Imaginary);
         ymax = clay.Max(p => p.Imaginary);
-
-        Console.WriteLine($"ymin: {ymin}, ymax: {ymax}, clay fields: {clay.Count}");
     }
 
     private bool Fill(Complex position, Complex direction)
