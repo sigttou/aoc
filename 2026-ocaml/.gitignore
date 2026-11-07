@@ -1,0 +1,29 @@
+# Dune / OCaml build artifacts
+_build/
+_install/
+*.install
+*.opam.locked
+.dune/
+*.cmi
+*.cmt
+*.cmti
+*.cmx
+*.cmo
+*.cma
+*.cmxa
+*.o
+*.a
+*.out
+
+# Editor / tooling
+.merlin
+.direnv/
+.vscode/
+
+# Advent of Code
+data/inputs/*
+data/examples/*
+!data/inputs/.keep
+!data/examples/.keep
+data/timings.json
+/lib/index.ml

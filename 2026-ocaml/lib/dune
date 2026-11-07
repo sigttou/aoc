@@ -1,0 +1,14 @@
+(library
+ (name aoc)
+ ;; Flat namespace: expose all modules (Util, Day01, ...) directly to the
+ ;; runner instead of wrapping them inside the main `Aoc` module.
+ (wrapped false))
+
+;; Auto-detects available days: every lib/dayNN.ml gets an index entry.
+(rule
+ (target index.ml)
+ (deps (glob_files day*.ml))
+ (action
+  (with-stdout-to index.ml
+   (run /bin/sh -c
+    "echo 'let days : (int * (module Util.S)) list = [';\\\n     for f in day*.ml; do\\\n       [ -e \"$f\" ] || continue;\n       m=$(basename \"$f\" .ml);\\\n       n=$(echo \"$m\" | sed 's/^day0*//');\\\n       echo \"  ($n, (module $(echo \"$m\" | sed 's/^d/D/') : Util.S));\";\\\n     done;\\\n     echo ']'"))))
